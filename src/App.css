@@ -1,0 +1,206 @@
+/* App.css */
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+/* Container for the entire app */
+.App {
+    padding: 30px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Title */
+h1 {
+    color: #4c4c4c;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Step container */
+.step-container {
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #2d2d2d;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Button styling */
+button {
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Style for 'Next' and 'Back' buttons */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Image and Size selector grid */
+.list-group-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1;
+    border-color: #ccc;
+}
+
+.list-group-item.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+img {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.d-flex.flex-wrap {
+    gap: 10px;
+}
+
+/* Text input styling */
+input[type="text"],
+input[type="number"],
+input[type="color"] {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="color"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+input[type="text"],
+input[type="number"],
+input[type="color"] {
+    background-color: #fff;
+}
+
+/* Canvas Preview */
+canvas {
+    border: 2px solid #ddd;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+}
+
+.canvas-circle {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.canvas-rectangle {
+    border-radius: 10px;
+}
+
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.card-title {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Step navigation buttons */
+.d-flex.justify-content-between {
+    margin-top: 30px;
+}
+
+/* Adding a nice transition to the form */
+input[type="text"],
+input[type="number"],
+input[type="color"],
+.list-group-item,
+button {
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Add subtle animation on page load */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.App {
+    animation: fadeIn 0.7s ease-in;
+}
+
+.selected {
+    background-color: #f0f8ff;
+    /* Light blue background when selected */
+    border: 2px solid blue;
+    box-shadow: 0 4px 12px rgba(0, 0, 255, 0.2);
+    /* Optional subtle shadow effect */
+}

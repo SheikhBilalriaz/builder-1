@@ -631,3 +631,23 @@
     justify-content: center;
     padding: 20px;
 }
+
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.color-picker {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.color-display {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+}

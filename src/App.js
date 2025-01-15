@@ -6,8 +6,62 @@ import MaterialOption from './components/MaterialOption';
 import BackgroundOption from './components/BackgroundOption';
 import ShapeOption from './components/ShapeOption';
 import TextOption from './components/TextOption';
+import AddOnOption from './components/AddOnOption';
 import useImage from 'use-image';
 import './App.css';
+
+function AddOnRenderer({ addOn, canvasSize }) {
+  const [image] = useImage(addOn.src);
+  const shapeWidth = canvasSize.width / 4;
+  const shapeHeight = canvasSize.height / 4;
+  const [position, setPosition] = useState({
+    x: (canvasSize.width - shapeWidth) / 3,
+    y: (canvasSize.height - shapeHeight) / 2
+  });
+  if (addOn.price === 0) return null;
+  const handleDragMove = (e) => {
+    const { x, y } = e.target.attrs;
+    setPosition({ x, y });
+  };
+
+  return (
+    <Image
+      image={image}
+      x={position.x}
+      y={position.y}
+      width={shapeWidth}
+      height={shapeHeight}
+      draggable
+      onDragMove={handleDragMove}
+    />
+  )
+}
+
+function ShapeRenderer({ shape, canvasSize, color }) {
+  const [image] = useImage(shape.src);
+  const shapeWidth = canvasSize.width / 1.5;
+  const shapeHeight = canvasSize.height / 1.5;
+  const [position, setPosition] = useState({
+    x: (canvasSize.width - shapeWidth) / 2,
+    y: (canvasSize.height - shapeHeight) / 2
+  });
+  const handleDragMove = (e) => {
+    const { x, y } = e.target.attrs;
+    setPosition({ x, y });
+  };
+
+  return (
+    <Image
+      image={image}
+      x={position.x}
+      y={position.y}
+      width={shapeWidth}
+      height={shapeHeight}
+      draggable
+      onDragMove={handleDragMove}
+    />
+  );
+}
 
 function App() {
   const [customFlow, setCustomFlow] = useState(true);
@@ -18,6 +72,7 @@ function App() {
   const [selectedThickness, setSelectedThickness] = useState(0);
   const [selectedBackground, setSelectedBackground] = useState(0);
   const [selectedShape, setSelectedShape] = useState(0);
+  const [selectedAddOn, setSelectedAddOn] = useState(0);
   const [selectedColor, setSelectedColor] = useState('#000000');
   const [textOptions, setTextOptions] = useState([]);
   const [selectedPrintOption, setSelectedPrintOption] = useState("back");
@@ -62,6 +117,11 @@ function App() {
     { price: 12, text: '' },
     { price: 32, text: '' },
     { price: 45, text: '' },
+  ];
+  const addOnData = [
+    { price: 0, name: "Clear Design", src: "images/addOns/clearDesign.png" },
+    { price: 25, name: "Anchor", src: "	images/addOns/Anchor.png" },
+    { price: 35, name: "Airplane Cloud", src: "	images/addOns/AirplaneCloud.png" },
   ];
 
   const onNext = () => {
@@ -133,6 +193,9 @@ function App() {
     link.href = dataURL;
     link.download = 'canvas.png';
     link.click();
+  };
+  const handleAddOnSelect = (index) => {
+    setSelectedAddOn(index);
   };
 
   const ProductImage = ({ src, x, y, width, height }) => {
@@ -387,6 +450,64 @@ function App() {
                   </div>
                 </div>
               )}
+              {currentStep === 8 && customFlow && (
+                <div className="options_form_step">
+                  <h3>Choose your Add On</h3>
+                  <div className="background_selections">
+                    {addOnData.map((item, index) => (
+                      <AddOnOption
+                        key={index}
+                        price={item.price}
+                        name={item.name}
+                        src={item.src}
+                        isSelected={selectedAddOn === index}
+                        onSelect={() => handleAddOnSelect(index)}
+                      />
+                    ))}
+                  </div>
+                  <div className="step_form_handler">
+                    <button onClick={onBack}>Back</button>
+                    <button onClick={onNext}>Next</button>
+                  </div>
+                </div>
+              )}
+              {currentStep === 9 && customFlow && (
+                <div class="options_form_step">
+                  <h3>Summary Info</h3>
+                  <div class="summary_info">
+                    <div class="summary_detail">
+                      <div class="detail">Size:</div>
+                      <div class="final_output">{sizeSelectionData[selectedSize].sizeInInches}"</div>
+                    </div>
+                    <div class="summary_detail">
+                      <div class="detail">Thickness:</div>
+                      <div class="final_output">
+                        {thicknessSelectionData[selectedThickness].thicknessInMM}mm
+                      </div>
+                    </div>
+                    <div class="summary_detail">
+                      <div class="detail">Shape:</div>
+                      <div class="final_output">{shapeSelectionData[selectedShape].name}</div>
+                    </div>
+                    <div class="summary_detail">
+                      <div class="detail">Shape Color:</div>
+                      <div class="final_output">{selectedColor}</div>
+                    </div>
+                    <div class="summary_detail">
+                      <div class="detail">Background:</div>
+                      <div class="final_output">{backgroundOptionsData[selectedBackground].name}</div>
+                    </div>
+                    <div class="summary_detail">
+                      <div class="detail">Add on design:</div>
+                      <div class="final_output">{addOnData[selectedAddOn].name}</div>
+                    </div>
+                  </div>
+                  <div class="step_form_handler">
+                    <button onClick={onBack}>Back</button>
+                    <button>Final</button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -432,6 +553,18 @@ function App() {
                         ))}
                       </Layer>
                     ) : null}
+                    <Layer>
+                      <ShapeRenderer
+                        shape={shapeSelectionData[selectedShape]}
+                        canvasSize={canvasSize}
+                      />
+                    </Layer>
+                    <Layer>
+                      <AddOnRenderer
+                        addOn={addOnData[selectedAddOn]}
+                        canvasSize={canvasSize}
+                      />
+                    </Layer>
                   </>
                 ) : null}
               </Stage>
@@ -439,8 +572,6 @@ function App() {
           </div>
           <div className="canvas_handlers">
             <button className="share_btns" onClick={handleDownload}>Download</button>
-            {/* <button className="share_btns">Share</button> */}
-            {/* <button className="total_cost">${totalCost}</button> */}
           </div>
         </div>
       </div>

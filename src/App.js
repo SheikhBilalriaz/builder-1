@@ -73,7 +73,7 @@ function App() {
   const [selectedBackground, setSelectedBackground] = useState(0);
   const [selectedShape, setSelectedShape] = useState(0);
   const [selectedAddOn, setSelectedAddOn] = useState(0);
-  const [selectedColor, setSelectedColor] = useState('#000000');
+  const [selectedColor, setSelectedColor] = useState(null);
   const [textOptions, setTextOptions] = useState([]);
   const [selectedPrintOption, setSelectedPrintOption] = useState("back");
   const stageRef = useRef();
@@ -122,6 +122,20 @@ function App() {
     { price: 0, name: "Clear Design", src: "images/addOns/clearDesign.png" },
     { price: 25, name: "Anchor", src: "	images/addOns/Anchor.png" },
     { price: 35, name: "Airplane Cloud", src: "	images/addOns/AirplaneCloud.png" },
+  ];
+  const colorShades = [
+    ['#750261', '#8D0073', '#B20092'],
+    ['#400061', '#51127B', '#612798'],
+    ['#041A64', '#172B82', '#1C3C9E'],
+    ['#003D74', '#005092', '#0265BA'],
+    ['#4B0082', '#6A0DAD', '#7B2B8A'],
+    ['#0000FF', '#3D65FF', '#6699FF'],
+    ['#00BFFF', '#1E90FF', '#4682B4'],
+    ['#FF1493', '#FF69B4', '#FF82AB'],
+    ['#FF6347', '#FF4500', '#FF5733'],
+    ['#800000', '#A52A2A', '#B22222'],
+    ['#808080', '#A9A9A9', '#D3D3D3'],
+    ['#D2691E', '#CD5C5C', '#F08080'],
   ];
 
   const onNext = () => {
@@ -406,11 +420,21 @@ function App() {
                   </div>
                   <h3>Shape Color</h3>
                   <div className="color-picker-wrapper">
-                    <input
-                      type="color"
-                      className="color-picker"
-                      onChange={(e) => handleColorChange(e.target.value)}
-                    />
+                    <svg width="200" height="200" viewBox="0 0 200 200">
+                      {colorShades.map((shadeGroup, groupIndex) => (
+                        <g key={groupIndex} transform={`rotate(${groupIndex * 30}, 100, 100)`}>
+                          {shadeGroup.map((shade, shadeIndex) => (
+                            <path
+                              key={shadeIndex}
+                              d="M100,100 L100,0 A100,100 0 0,1 100,200 Z"
+                              fill={shade}
+                              transform={`rotate(${shadeIndex * 10}, 100, 100)`}
+                              onClick={(e) => handleColorChange(shade)}
+                            />
+                          ))}
+                        </g>
+                      ))}
+                    </svg>
                     <span className="color-display">
                       {selectedColor ? `Selected color: ${selectedColor}` : 'No color selected'}
                     </span>

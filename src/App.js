@@ -10,7 +10,7 @@ import AddOnOption from './components/AddOnOption';
 import useImage from 'use-image';
 import './App.css';
 
-function AddOnRenderer({ addOn, canvasSize }) {
+function AddOnRenderer({ addOn, canvasSize, color }) {
   const [image] = useImage(addOn.src);
   const shapeWidth = canvasSize.width / 4;
   const shapeHeight = canvasSize.height / 4;
@@ -33,6 +33,7 @@ function AddOnRenderer({ addOn, canvasSize }) {
       height={shapeHeight}
       draggable
       onDragMove={handleDragMove}
+      fill={color}
     />
   )
 }
@@ -59,6 +60,7 @@ function ShapeRenderer({ shape, canvasSize, color }) {
       height={shapeHeight}
       draggable
       onDragMove={handleDragMove}
+      fill={color}
     />
   );
 }
@@ -74,6 +76,7 @@ function App() {
   const [selectedShape, setSelectedShape] = useState(0);
   const [selectedAddOn, setSelectedAddOn] = useState(0);
   const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedAddOnColor, setSelectedAddOnColor] = useState(null);
   const [textOptions, setTextOptions] = useState([]);
   const [selectedPrintOption, setSelectedPrintOption] = useState("back");
   const stageRef = useRef();
@@ -137,7 +140,6 @@ function App() {
     ['#808080', '#A9A9A9', '#D3D3D3'],
     ['#D2691E', '#CD5C5C', '#F08080'],
   ];
-
   const onNext = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
@@ -169,6 +171,9 @@ function App() {
   const handleColorChange = (index) => {
     setSelectedColor(index);
   };
+  const handleAddOnColorChange = (index) => {
+    setSelectedAddOnColor(index);
+  }
   const handleAddTextOption = () => {
     if (textOptions.length < 3) {
       const newId = textOptions.length;
@@ -420,18 +425,32 @@ function App() {
                   </div>
                   <h3>Shape Color</h3>
                   <div className="color-picker-wrapper">
-                    <svg width="200" height="200" viewBox="0 0 200 200">
+                    <svg width="400" height="400" viewBox="0 0 400 400">
+                      <circle cx="200" cy="200" r="50" fill={selectedColor} />
                       {colorShades.map((shadeGroup, groupIndex) => (
-                        <g key={groupIndex} transform={`rotate(${groupIndex * 30}, 100, 100)`}>
-                          {shadeGroup.map((shade, shadeIndex) => (
-                            <path
-                              key={shadeIndex}
-                              d="M100,100 L100,0 A100,100 0 0,1 100,200 Z"
-                              fill={shade}
-                              transform={`rotate(${shadeIndex * 10}, 100, 100)`}
-                              onClick={(e) => handleColorChange(shade)}
-                            />
-                          ))}
+                        <g key={groupIndex}>
+                          {shadeGroup.map((shade, shadeIndex) => {
+                            const angleStart = (360 / (colorShades.length * shadeGroup.length)) * (groupIndex * shadeGroup.length + shadeIndex);
+                            const angleEnd = angleStart + (360 / (colorShades.length * shadeGroup.length));
+                            const radius = 150;
+                            const startX = 200 + radius * Math.cos((angleStart * Math.PI) / 180);
+                            const startY = 200 + radius * Math.sin((angleStart * Math.PI) / 180);
+                            const endX = 200 + radius * Math.cos((angleEnd * Math.PI) / 180);
+                            const endY = 200 + radius * Math.sin((angleEnd * Math.PI) / 180);
+                            const largeArcFlag = angleEnd - angleStart > 180 ? 1 : 0;
+                            const isSelected = selectedColor === shade;
+                            return (
+                              <path
+                                key={`${groupIndex}-${shadeIndex}`}
+                                d={`M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`}
+                                stroke={shade}
+                                strokeWidth={isSelected ? "75" : "65"}
+                                strokeOpacity={isSelected ? "0.9" : "0.8"}
+                                fill="none"
+                                onClick={() => handleColorChange(shade)}
+                              />
+                            );
+                          })}
                         </g>
                       ))}
                     </svg>
@@ -489,6 +508,41 @@ function App() {
                       />
                     ))}
                   </div>
+                  <h3>Shape Color</h3>
+                  <div className="color-picker-wrapper">
+                    <svg width="400" height="400" viewBox="0 0 400 400">
+                      <circle cx="200" cy="200" r="50" fill={selectedAddOnColor} />
+                      {colorShades.map((shadeGroup, groupIndex) => (
+                        <g key={groupIndex}>
+                          {shadeGroup.map((shade, shadeIndex) => {
+                            const angleStart = (360 / (colorShades.length * shadeGroup.length)) * (groupIndex * shadeGroup.length + shadeIndex);
+                            const angleEnd = angleStart + (360 / (colorShades.length * shadeGroup.length));
+                            const radius = 150;
+                            const startX = 200 + radius * Math.cos((angleStart * Math.PI) / 180);
+                            const startY = 200 + radius * Math.sin((angleStart * Math.PI) / 180);
+                            const endX = 200 + radius * Math.cos((angleEnd * Math.PI) / 180);
+                            const endY = 200 + radius * Math.sin((angleEnd * Math.PI) / 180);
+                            const largeArcFlag = angleEnd - angleStart > 180 ? 1 : 0;
+                            const isSelected = selectedAddOnColor === shade;
+                            return (
+                              <path
+                                key={`${groupIndex}-${shadeIndex}`}
+                                d={`M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endX} ${endY}`}
+                                stroke={shade}
+                                strokeWidth={isSelected ? "75" : "65"}
+                                strokeOpacity={isSelected ? "0.9" : "0.8"}
+                                fill="none"
+                                onClick={() => handleAddOnColorChange(shade)}
+                              />
+                            );
+                          })}
+                        </g>
+                      ))}
+                    </svg>
+                    <span className="color-display">
+                      {selectedAddOnColor ? `Selected color: ${selectedAddOnColor}` : 'No color selected'}
+                    </span>
+                  </div>
                   <div className="step_form_handler">
                     <button onClick={onBack}>Back</button>
                     <button onClick={onNext}>Next</button>
@@ -525,6 +579,10 @@ function App() {
                       <div class="detail">Add on design:</div>
                       <div class="final_output">{addOnData[selectedAddOn].name}</div>
                     </div>
+                    <div class="summary_detail">
+                      <div class="detail">Add On Color:</div>
+                      <div class="final_output">{selectedAddOnColor}</div>
+                    </div>
                   </div>
                   <div class="step_form_handler">
                     <button onClick={onBack}>Back</button>
@@ -560,6 +618,20 @@ function App() {
                 </Layer>
                 {selectedProduct === -1 ? (
                   <>
+                    <Layer>
+                      <ShapeRenderer
+                        shape={shapeSelectionData[selectedShape]}
+                        canvasSize={canvasSize}
+                        color={selectedColor}
+                      />
+                    </Layer>
+                    <Layer>
+                      <AddOnRenderer
+                        addOn={addOnData[selectedAddOn]}
+                        canvasSize={canvasSize}
+                        color={selectedAddOnColor}
+                      />
+                    </Layer>
                     {textOptions.length !== 0 ? (
                       <Layer>
                         {textOptions.map((option) => (
@@ -577,18 +649,6 @@ function App() {
                         ))}
                       </Layer>
                     ) : null}
-                    <Layer>
-                      <ShapeRenderer
-                        shape={shapeSelectionData[selectedShape]}
-                        canvasSize={canvasSize}
-                      />
-                    </Layer>
-                    <Layer>
-                      <AddOnRenderer
-                        addOn={addOnData[selectedAddOn]}
-                        canvasSize={canvasSize}
-                      />
-                    </Layer>
                   </>
                 ) : null}
               </Stage>

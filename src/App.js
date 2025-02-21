@@ -426,7 +426,20 @@ function App() {
                   <h3>Shape Color</h3>
                   <div className="color-picker-wrapper">
                     <svg width="400" height="400" viewBox="0 0 400 400">
-                      <circle cx="200" cy="200" r="50" fill={selectedColor} />
+                      <g onClick={() => handleColorChange(selectedColor === 'black' ? null : 'black')}>
+                        <path d="M 200,150 A 50,50 0 0,1 200,250 L 200,200 Z"
+                          fill="black"
+                          stroke={selectedColor === 'black' ? 'red' : 'black'}
+                          strokeWidth={selectedColor === 'black' ? "3" : "1"}
+                        />
+                      </g>
+                      <g onClick={() => handleColorChange(selectedColor === 'white' ? null : 'white')}>
+                        <path d="M 200,150 A 50,50 0 0,0 200,250 L 200,200 Z"
+                          fill="white"
+                          stroke={selectedColor === 'white' ? 'red' : 'black'}
+                          strokeWidth={selectedColor === 'white' ? "3" : "1"}
+                        />
+                      </g>
                       {colorShades.map((shadeGroup, groupIndex) => (
                         <g key={groupIndex}>
                           {shadeGroup.map((shade, shadeIndex) => {
@@ -454,9 +467,6 @@ function App() {
                         </g>
                       ))}
                     </svg>
-                    <span className="color-display">
-                      {selectedColor ? `Selected color: ${selectedColor}` : 'No color selected'}
-                    </span>
                   </div>
                   <div className="step_form_handler">
                     <button onClick={onBack}>Back</button>
@@ -511,7 +521,21 @@ function App() {
                   <h3>Shape Color</h3>
                   <div className="color-picker-wrapper">
                     <svg width="400" height="400" viewBox="0 0 400 400">
-                      <circle cx="200" cy="200" r="50" fill={selectedAddOnColor} />
+                      <g onClick={() => handleAddOnColorChange(selectedAddOnColor === 'black' ? null : 'black')}>
+                        <path d="M 200,150 A 50,50 0 0,1 200,250 L 200,200 Z"
+                          fill="black"
+                          stroke={selectedAddOnColor === 'black' ? 'red' : 'black'}
+                          strokeWidth={selectedAddOnColor === 'black' ? "3" : "1"}
+                        />
+                      </g>
+
+                      <g onClick={() => handleAddOnColorChange(selectedAddOnColor === 'white' ? null : 'white')}>
+                        <path d="M 200,150 A 50,50 0 0,0 200,250 L 200,200 Z"
+                          fill="white"
+                          stroke={selectedAddOnColor === 'white' ? 'red' : 'black'}
+                          strokeWidth={selectedAddOnColor === 'white' ? "3" : "1"}
+                        />
+                      </g>
                       {colorShades.map((shadeGroup, groupIndex) => (
                         <g key={groupIndex}>
                           {shadeGroup.map((shade, shadeIndex) => {
@@ -539,9 +563,6 @@ function App() {
                         </g>
                       ))}
                     </svg>
-                    <span className="color-display">
-                      {selectedAddOnColor ? `Selected color: ${selectedAddOnColor}` : 'No color selected'}
-                    </span>
                   </div>
                   <div className="step_form_handler">
                     <button onClick={onBack}>Back</button>
